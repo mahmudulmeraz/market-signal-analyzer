@@ -1,114 +1,467 @@
 # SIGNAL TERMINAL
 
-Native Windows desktop application for **market research**, **transparent technical signals**, **backtesting**, and **paper trading**.
+> **Market Analysis • Technical Indicators • Signal Research**
 
-This is not a broker. It does not place real orders. It does not guarantee profits or a fixed accuracy percentage. Historical results do not imply future results.
+SIGNAL TERMINAL is a desktop-oriented market analysis application built to explore real-time market data, technical indicators, chart analysis, and rule-based trading signals through a simple visual interface.
 
-## Install (Windows)
+The project focuses on combining **market-data processing, technical analysis, visualization, and desktop application development** into a single workflow.
 
-Unzip, then **open the folder that contains `requirements.txt`** (same folder as `run.py`).
+---
 
-**Option A — double-click**
+## Overview
 
-1. `install.bat`
-2. `run.bat`
+SIGNAL TERMINAL is designed as a research and analysis tool rather than a conventional trading bot.
 
-**Option B — Command Prompt** (must already be inside this folder)
+The application processes market data, calculates technical indicators, evaluates a signal model, and presents the resulting analysis through a desktop interface.
 
 ```text
+Market Data
+     ↓
+Data Processing
+     ↓
+Candle Construction
+     ↓
+Technical Indicators
+     ↓
+Signal Model
+     ↓
+Visual Analysis
+     ↓
+User Decision
+```
+
+The goal is to make technical market information easier to inspect without requiring the user to work directly with raw data or command-line tools.
+
+---
+
+## Features
+
+### Market Analysis
+
+* Candlestick-based market visualization
+* Multiple currency pairs
+* Configurable timeframes
+* Market-data processing
+* Technical indicator calculations
+* Signal generation
+* Visual market analysis
+
+### Technical Indicators
+
+The current project explores indicators and market-structure concepts including:
+
+* RSI
+* Bollinger Bands
+* Moving Average
+* Fractals
+* ZigZag
+
+These indicators are combined within the application's analysis workflow to generate rule-based signal outputs.
+
+---
+
+## Application Workflow
+
+```text
+Data Provider
+     │
+     ▼
+Market Data
+     │
+     ▼
+Candle Processing
+     │
+     ▼
+Indicator Engine
+     │
+     ├── RSI
+     ├── Bollinger Bands
+     ├── Moving Average
+     ├── Fractal
+     └── ZigZag
+     │
+     ▼
+Signal Analysis
+     │
+     ▼
+Desktop Interface
+```
+
+---
+
+## Supported Market Pairs
+
+The project has been developed with currency-market analysis in mind, including pairs such as:
+
+```text
+USD/BRL
+USD/ARS
+USD/BDT
+USD/PKR
+USD/DZD
+USD/INR
+EUR/GBP
+CAD/CHF
+AUD/NZD
+AUD/CHF
+```
+
+Availability and data quality depend on the selected market-data provider.
+
+---
+
+## Technology Stack
+
+### Programming
+
+* Python
+* HTML/CSS/JavaScript where applicable to the interface
+* Batch scripting for Windows automation
+
+### Data & Analysis
+
+* Market-data APIs
+* Technical indicator calculations
+* Time-series processing
+* Signal evaluation
+
+### Application Packaging
+
+* PyInstaller
+* Inno Setup
+* Windows batch scripts
+
+### Development
+
+* Python virtual environment
+* Requirements-based dependency management
+* Automated Windows build workflow
+
+---
+
+## Project Structure
+
+```text
+SIGNAL_TERMINAL/
+│
+├── app/
+│   └── Application source code
+│
+├── data/
+│   └── Project data
+│
+├── tests/
+│   └── Test files
+│
+├── docs/
+│   └── Additional documentation
+│
+├── README.md
+├── INSTALL.md
+├── WINDOWS_BUILD.md
+│
+├── requirements.txt
+├── run.py
+├── run.bat
+├── install.bat
+├── build_windows.bat
+├── installer.iss
+├── signalterminal.spec
+│
+└── .gitignore
+```
+
+Generated build directories and local environments such as `.venv`, `build`, `dist`, `output`, and runtime logs are intentionally excluded from the source repository.
+
+---
+
+## Installation
+
+### Windows — Source Installation
+
+Clone or download the repository and open the project directory containing:
+
+```text
+requirements.txt
+run.py
+app/
+```
+
+The easiest method on Windows is:
+
+```text
+1. Double-click install.bat
+2. Wait for the installation to complete
+3. Double-click run.bat
+```
+
+### Manual Installation
+
+Create a virtual environment:
+
+```bash
 python -m venv .venv
+```
+
+Activate it:
+
+```bash
 .venv\Scripts\activate
+```
+
+Install dependencies:
+
+```bash
 pip install -r requirements.txt
+```
+
+Run the application:
+
+```bash
 python run.py
 ```
 
-If pip says `No such file or directory: requirements.txt`, you are in the wrong folder. Go one level in until you see `requirements.txt`.
+For detailed instructions, see:
 
-## What it does
+**[INSTALL.md](INSTALL.md)**
 
-- Simulated (and later, legitimate live) market data for ten FX pairs
-- Real-time candlestick chart (pyqtgraph)
-- RSI, Bollinger Bands, SMA/EMA, confirmed Williams fractals, confirmed ZigZag
-- Deterministic multi-factor BUY / SELL / WAIT with written reasons
-- SQLite persistence of candles, signals, paper trades, backtests
-- In-sample / validation / out-of-sample and walk-forward backtests
-- Paper trading account clearly labeled **NO REAL MONEY**
-- Always-on-top overlay
-- Isolated `BrokerAdapter` for a future **official** API only
+---
 
-## Pairs
+## Building the Windows Application
 
-USD/BRL, USD/ARS, USD/BDT, USD/PKR, USD/DZD, USD/INR, EUR/GBP, CAD/CHF, AUD/NZD, AUD/CHF
+The repository contains the scripts and configuration required to build a standalone Windows application.
 
-## Requirements
+### Requirements
 
-- Windows 10/11 (also runs on macOS/Linux with a display)
-- Python 3.10+ (3.11+ recommended), added to PATH
-- Dependencies in `requirements.txt`
+* Windows
+* Python 3.11 x64
+* Inno Setup 6 — required for the installer
 
-## Data mode
+### Build
 
-Default provider: **SIMULATED DATA** (deterministic synthetic OHLC). The UI never labels this as live.
-
-Live feed: `app/data/providers/live_provider.py` reports **LIVE DATA: NOT CONFIGURED** until you plug in a legitimate source behind `MarketDataProvider`.
-
-## Signal methodology
-
-Each family contributes a signed score (default 20 points each, configurable):
-
-1. RSI (Wilder) — recovery from oversold/overbought, never a standalone guarantee
-2. Bollinger — rejection / breakout / position; contraction is a conflict, not a trade
-3. Moving average — trend context (SMA or EMA)
-4. Fractal — **confirmed only** after both right-hand wings have closed
-5. ZigZag — **confirmed only** after a reversal of `deviation` percent
-
-Score ≥ buy threshold → BUY; ≤ sell threshold → SELL; otherwise **WAIT**.
-
-WAIT is a first-class output. The engine will not force a low-quality call.
-
-## Backtesting and look-ahead
-
-At bar `i` the engine sees `candles[0:i+1]` only.
-
-- Fractals whose right wing has not closed are ignored
-- ZigZag developing extremes are not treated as history
-- Signals fire on the **close** of bar `i`
-- Fills occur at the **next bar open**, plus configurable spread
-
-Training, validation, out-of-sample, walk-forward, paper, and live samples are stored and displayed separately.
-
-If a sample is too small, the UI shows **INSUFFICIENT SAMPLE SIZE** instead of a fake win rate.
-
-## Paper trading
-
-Virtual balance, position size, holding bars, spread. Same signal engine. Banner: **PAPER TRADING — NO REAL MONEY**.
-
-## Tests
+Run:
 
 ```text
-pytest
+build_windows.bat
 ```
 
-## Packaging (Windows exe)
+Then open:
 
 ```text
-pip install pyinstaller
-pyinstaller signal_terminal.spec
+installer.iss
 ```
 
-Output: `dist/SIGNAL_TERMINAL.exe`
+with Inno Setup Compiler and compile the installer.
 
-## Security
+The resulting installer is generated as:
 
-No passwords, cookies, session tokens, or CAPTCHA bypass. No unofficial Quotex (or similar) automation. A future official adapter can live under `app/broker/adapters/` without changing the rest of the app.
+```text
+Output\SIGNAL_TERMINAL_Setup.exe
+```
+
+For the complete build procedure, see:
+
+**[WINDOWS_BUILD.md](WINDOWS_BUILD.md)**
+
+---
+
+## Data Provider
+
+The current live-data provider uses **Yahoo Finance public FX chart endpoints**.
+
+This is important when interpreting the application's market data.
+
+The provider:
+
+* Is not a licensed broker feed.
+* Does not provide Quotex OTC prices.
+* May not support every requested symbol.
+* May have differences in candle construction or timing.
+* May not update every timeframe consistently.
+
+Therefore, the application's market data should **not** be assumed to be identical to another broker or trading platform's chart.
+
+---
+
+## Signal Model
+
+SIGNAL TERMINAL uses technical indicators and market-structure information as inputs to its signal-analysis workflow.
+
+The generated output represents the result of the application's current rules and calculations.
+
+It should be treated as:
+
+```text
+Analysis
+   ≠
+Guaranteed Prediction
+```
+
+The project is intended to explore how technical indicators and market data can be combined into a transparent signal-analysis system.
+
+---
+
+## Current Status
+
+**Development / Research**
+
+The application is an ongoing project.
+
+Current development areas include:
+
+* Data-provider reliability
+* Candle synchronization
+* Indicator calculations
+* Signal-model refinement
+* Desktop UI improvements
+* Windows packaging
+* Testing and validation
+
+The system should not be considered a production-grade trading platform.
+
+---
 
 ## Limitations
 
-- No licensed live FX feed is bundled. Simulation is for research and UI testing.
-- Strategy weights are **not** optimized. They are transparent defaults.
-- Measured win rates on simulated paths are not trading advice.
+The current implementation has several important limitations.
 
+### Market Data
 
-## Build a Windows installer
+Different providers can produce different:
 
-For a user-friendly Windows installer, see `WINDOWS_BUILD_GUIDE.txt`. On Windows, run `build_windows.bat`, then compile `installer.iss` with Inno Setup 6. The final installer is `Output\SIGNAL_TERMINAL_Setup.exe`. Build on Windows; this ZIP does not contain a prebuilt EXE.
+* Prices
+* Candles
+* Timestamps
+* Timeframes
+* Market sessions
+
+Therefore, signals based on one provider may not match another platform.
+
+### OTC Markets
+
+The current provider does **not** represent Quotex OTC pricing.
+
+The application should therefore not be used to claim that its signals accurately predict Quotex OTC candles.
+
+### Signal Accuracy
+
+No signal model can guarantee future market movements.
+
+The application does not provide guaranteed trading outcomes.
+
+---
+
+## Research & Paper Trading
+
+SIGNAL TERMINAL is intended for:
+
+* Research
+* Technical analysis
+* Software experimentation
+* Market-data analysis
+* Paper trading
+* Backtesting and model experimentation
+
+The application **does not place real-money trades or execute real orders**.
+
+---
+
+## Security
+
+Do not commit sensitive information to this repository.
+
+Avoid uploading:
+
+```text
+.env
+API keys
+Access tokens
+Passwords
+Private credentials
+Private configuration
+```
+
+Local environments and generated files should remain excluded through `.gitignore`.
+
+---
+
+## Development Philosophy
+
+The project follows a simple principle:
+
+> **Make the analysis visible, understandable, and testable.**
+
+Rather than hiding signal generation behind an unexplained "prediction" system, the project is designed around identifiable data-processing and technical-analysis steps.
+
+```text
+Data
+ ↓
+Processing
+ ↓
+Indicators
+ ↓
+Rules
+ ↓
+Signal
+ ↓
+Visualization
+```
+
+This makes the application easier to inspect, improve, and experiment with.
+
+---
+
+## Roadmap
+
+Potential future development includes:
+
+* [ ] Improved real-time data synchronization
+* [ ] Additional market-data providers
+* [ ] More technical indicators
+* [ ] Configurable signal rules
+* [ ] Backtesting interface
+* [ ] Paper-trading simulation
+* [ ] Signal history
+* [ ] Performance analytics
+* [ ] Improved Windows installer
+* [ ] Expanded automated testing
+* [ ] Better error handling and logging
+* [ ] Improved desktop UI/UX
+
+---
+
+## Disclaimer
+
+SIGNAL TERMINAL is a **research and software-development project**.
+
+It is not financial advice, a broker, or a guaranteed prediction system.
+
+Market data may be delayed, incomplete, inaccurate, or different from other trading platforms.
+
+The application does not guarantee profitable trades or future market movements.
+
+**Do not use generated signals as the sole basis for financial decisions.**
+
+---
+
+## Author
+
+**Mahmudul Meraz**
+
+Frontend Developer • Builder • Student • Technology Explorer
+
+This project is part of my ongoing exploration of software development, data-driven applications, technical analysis, and desktop application engineering.
+
+---
+
+## License
+
+This project is provided for educational, research, and development purposes.
+
+See the repository license for applicable terms.
+
+---
+
+> **BUILD • LEARN • EXPERIMENT**
+>
+> SIGNAL TERMINAL
